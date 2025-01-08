@@ -10,7 +10,7 @@ interface Message {
 
 const WELCOME_MESSAGE = "omg hey bestie! 🎬✨ your resident viral TikTok expert and podcast girlies tea spiller here! type 'Hit Me' for 5 viral TikTok ideas that'll make our podcast app blow up fr fr! let's make some content go off bestie! 💅🎧";
 
-const VIRAL_IDEAS_PROMPT = `COMMAND: HIT_ME`;
+const VIRAL_IDEAS_PROMPT = "COMMAND: HIT_ME";
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([{
@@ -29,18 +29,22 @@ export function useChat() {
     const processedInput = input.trim().toLowerCase();
     const isHitMeCommand = processedInput === 'hit me';
     
-    const userMessage: Message = {
+    // Create the message to display to the user
+    const displayMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input // Show original input to user
+    };
+
+    // Create the message to send to the API
+    const apiMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
       content: isHitMeCommand ? VIRAL_IDEAS_PROMPT : input
     };
 
     // Add user's message to the chat
-    setMessages(prevMessages => [...prevMessages, {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input // Show original input to user
-    }]);
+    setMessages(prevMessages => [...prevMessages, displayMessage]);
     
     setInput('');
     setIsLoading(true);
@@ -52,7 +56,7 @@ export function useChat() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: [...messages, userMessage],
+          messages: [...messages, apiMessage],
         }),
       });
 
@@ -62,6 +66,10 @@ export function useChat() {
 
       const data = await response.json();
       
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
       setMessages(prevMessages => [...prevMessages, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -69,7 +77,6 @@ export function useChat() {
       }]);
     } catch (error) {
       console.error('Error sending message:', error);
-      // Add error message to chat
       setMessages(prevMessages => [...prevMessages, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
