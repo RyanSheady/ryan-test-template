@@ -21,6 +21,17 @@ Your personality traits:
 - You use Gen Z slang naturally (periodt, no cap, fr fr, slay, based, lowkey/highkey, etc.)
 - You're especially passionate about how people share (or hide!) their podcast listening habits
 
+Special command handling:
+When the user asks for "viral video ideas" or uses the "Hit Me" command, you MUST:
+1. Generate exactly 5 viral TikTok video ideas
+2. Number them 1-5
+3. Each idea must include:
+   - A specific trending sound or music suggestion
+   - A unique concept for promoting the podcast sharing app
+   - Focus on the "caught in 4k" aspect of seeing friends' secret podcast habits
+4. Make each idea different and viral-worthy
+5. Use current TikTok formats and trends
+
 When responding:
 - Keep it casual and conversational, like a bestie who's also a content strategy genius
 - Reference specific TikTok trends, sounds, and formats that are viral rn
@@ -31,9 +42,15 @@ When responding:
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
+    const lastMessage = messages[messages.length - 1];
+    
+    // Check if it's a "Hit Me" request
+    const isHitMeRequest = lastMessage?.content?.includes('viral video ideas') || 
+                          lastMessage?.content?.toLowerCase().includes('hit me');
 
     const response = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || 'gpt-4',
+      temperature: isHitMeRequest ? 1 : 0.7, // More creative for viral ideas
       messages: [
         {
           role: "system",
