@@ -1,4 +1,4 @@
-import Chat from '@/components/Chat';
+import Chat from '../components/Chat';
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
         </div>
 
         {/* Chat Container */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden min-h-[700px]">
           <Chat />
         </div>
       </div>
