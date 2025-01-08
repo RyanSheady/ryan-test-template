@@ -8,14 +8,15 @@ interface Message {
   content: string;
 }
 
-const VIRAL_IDEAS_PROMPT = `COMMAND: HIT_ME
-Generate 5 viral TikTok video ideas for a podcast sharing app where users can see what podcasts their friends are secretly listening to. Make them trendy, engaging, and use current TikTok formats. Number them 1-5 and make each one unique and viral-worthy. Include trending sounds or music suggestions for each. Focus on the "caught in 4k" aspect of seeing friends' secret podcast habits.`;
+const WELCOME_MESSAGE = "omg hey bestie! 🎬✨ your resident viral TikTok expert and podcast girlies tea spiller here! type 'Hit Me' for 5 viral TikTok ideas that'll make our podcast app blow up fr fr! let's make some content go off bestie! 💅🎧";
+
+const VIRAL_IDEAS_PROMPT = `COMMAND: HIT_ME`;
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([{
     id: 'welcome',
     role: 'assistant',
-    content: "omg hey bestie! 🎬✨ your resident viral TikTok expert and podcast girlies tea spiller here! i'm literally obsessed with creating viral moments and exposing what podcasts everyone's secretly binging rn! type 'Hit Me' for 5 viral TikTok ideas that'll have everyone downloading our podcast sharing app fr fr! let's make some content go off bestie! 💅🎧"
+    content: WELCOME_MESSAGE
   }]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,21 +25,21 @@ export function useChat() {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Check for "Hit Me" command
-    const processedInput = input.trim();
-    const isHitMeCommand = processedInput.toLowerCase() === 'hit me';
+    // Check for "Hit Me" command (case insensitive)
+    const processedInput = input.trim().toLowerCase();
+    const isHitMeCommand = processedInput === 'hit me';
     
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: isHitMeCommand ? VIRAL_IDEAS_PROMPT : processedInput
+      content: isHitMeCommand ? VIRAL_IDEAS_PROMPT : input
     };
 
     // Add user's message to the chat
-    setMessages(msgs => [...msgs, {
+    setMessages(prevMessages => [...prevMessages, {
       id: Date.now().toString(),
       role: 'user',
-      content: processedInput // Show original input to user
+      content: input // Show original input to user
     }]);
     
     setInput('');
@@ -51,7 +52,7 @@ export function useChat() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: [...messages, userMessage], // Send actual message with command
+          messages: [...messages, userMessage],
         }),
       });
 
@@ -61,13 +62,19 @@ export function useChat() {
 
       const data = await response.json();
       
-      setMessages(msgs => [...msgs, {
+      setMessages(prevMessages => [...prevMessages, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: data.content
       }]);
     } catch (error) {
       console.error('Error sending message:', error);
+      // Add error message to chat
+      setMessages(prevMessages => [...prevMessages, {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: "omg bestie, something went wrong! try again in a sec? 🙈"
+      }]);
     } finally {
       setIsLoading(false);
     }
