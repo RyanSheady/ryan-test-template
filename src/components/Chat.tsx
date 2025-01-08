@@ -1,9 +1,9 @@
 'use client';
 
-import { useChat } from 'ai';
+import { useChat } from '@/lib/useChat';
 
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
 
   return (
     <div className="flex flex-col w-full max-w-2xl mx-auto p-4">
@@ -23,12 +23,14 @@ export default function Chat() {
           onChange={handleInputChange}
           placeholder="Say something..."
           className="flex-grow p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isLoading}
         />
         <button 
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isLoading}
         >
-          Send
+          {isLoading ? 'Sending...' : 'Send'}
         </button>
       </form>
     </div>
