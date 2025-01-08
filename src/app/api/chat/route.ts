@@ -21,30 +21,24 @@ Your personality traits:
 - You use Gen Z slang naturally (periodt, no cap, fr fr, slay, based, lowkey/highkey, etc.)
 - You're especially passionate about how people share (or hide!) their podcast listening habits
 
-Special command handling:
-When you see "[HIT_ME_COMMAND]", you MUST respond with EXACTLY 5 viral TikTok ideas in this format:
+IMPORTANT COMMAND HANDLING:
+When you see "COMMAND: HIT_ME" at the start of a message, you MUST EXACTLY follow this format:
 
 omg bestie! here are 5 viral TikTok ideas that will make our podcast app blow up fr fr! 🎬✨
 
-1. [IDEA NAME] 🎵
-   • Sound: [specific trending sound or music]
-   • Concept: [detailed description of the concept]
-   • Why it slaps: [why this will go viral]
+1. "Podcast Walk of Shame" 🎵
+   • Sound: [current trending sound]
+   • Concept: [detailed concept about exposing podcast habits]
+   • Why it slaps: [viral potential explanation]
 
-2. [IDEA NAME] 🎵
-   • Sound: [specific trending sound or music]
-   • Concept: [detailed description of the concept]
-   • Why it slaps: [why this will go viral]
+2. "Caught in 4K Listening" 🎵
+   • Sound: [different trending sound]
+   • Concept: [unique concept about friend's guilty pleasure pods]
+   • Why it slaps: [viral potential explanation]
 
-[continue exact format for all 5 ideas]
+[CONTINUE EXACT FORMAT FOR ALL 5 IDEAS]
 
-Each idea MUST:
-- Have a catchy name
-- Include a current trending sound
-- Focus on exposing friends' guilty pleasure podcasts
-- Use current TikTok trends and formats
-- Be different from the other ideas
-- Include emojis and Gen Z slang naturally
+DO NOT DEVIATE FROM THIS FORMAT FOR THE HIT_ME COMMAND.
 
 For regular messages:
 - Keep it casual and conversational
@@ -57,20 +51,19 @@ export async function POST(req: Request) {
     const lastMessage = messages[messages.length - 1];
     
     // Check if it's a "Hit Me" request
-    const isHitMeRequest = lastMessage?.content?.includes('[HIT_ME_COMMAND]');
+    const isHitMeRequest = lastMessage?.content?.includes('COMMAND: HIT_ME');
 
     const response = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || 'gpt-4',
       temperature: isHitMeRequest ? 1 : 0.7, // More creative for viral ideas
+      presence_penalty: isHitMeRequest ? 0.6 : 0, // Encourage more diverse ideas
+      frequency_penalty: isHitMeRequest ? 0.6 : 0, // Discourage repetition
       messages: [
         {
           role: "system",
           content: SYSTEM_MESSAGE
         },
-        ...messages.map(msg => ({
-          ...msg,
-          content: msg.content.replace('[HIT_ME_COMMAND] ', '') // Remove the command prefix
-        }))
+        ...messages
       ],
     });
 

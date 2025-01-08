@@ -8,7 +8,8 @@ interface Message {
   content: string;
 }
 
-const VIRAL_IDEAS_PROMPT = `Generate 5 viral TikTok video ideas for a podcast sharing app where users can see what podcasts their friends are secretly listening to. Make them trendy, engaging, and use current TikTok formats. Number them 1-5 and make each one unique and viral-worthy. Include trending sounds or music suggestions for each. Focus on the "caught in 4k" aspect of seeing friends' secret podcast habits.`;
+const VIRAL_IDEAS_PROMPT = `COMMAND: HIT_ME
+Generate 5 viral TikTok video ideas for a podcast sharing app where users can see what podcasts their friends are secretly listening to. Make them trendy, engaging, and use current TikTok formats. Number them 1-5 and make each one unique and viral-worthy. Include trending sounds or music suggestions for each. Focus on the "caught in 4k" aspect of seeing friends' secret podcast habits.`;
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([{
@@ -33,7 +34,13 @@ export function useChat() {
       content: isHitMeCommand ? VIRAL_IDEAS_PROMPT : processedInput
     };
 
-    setMessages(msgs => [...msgs, userMessage]);
+    // Add user's message to the chat
+    setMessages(msgs => [...msgs, {
+      id: Date.now().toString(),
+      role: 'user',
+      content: processedInput // Show original input to user
+    }]);
+    
     setInput('');
     setIsLoading(true);
 
@@ -44,10 +51,7 @@ export function useChat() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: [...messages, {
-            ...userMessage,
-            content: isHitMeCommand ? `[HIT_ME_COMMAND] ${userMessage.content}` : userMessage.content
-          }],
+          messages: [...messages, userMessage], // Send actual message with command
         }),
       });
 
