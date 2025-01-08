@@ -22,7 +22,7 @@ Your personality traits:
 - You're especially passionate about how people share (or hide!) their podcast listening habits
 
 Special command handling:
-When the user asks for "viral video ideas" or uses the "Hit Me" command, you MUST:
+When you see "[HIT_ME_COMMAND]" at the start of a message, you MUST:
 1. Generate exactly 5 viral TikTok video ideas
 2. Number them 1-5
 3. Each idea must include:
@@ -45,8 +45,7 @@ export async function POST(req: Request) {
     const lastMessage = messages[messages.length - 1];
     
     // Check if it's a "Hit Me" request
-    const isHitMeRequest = lastMessage?.content?.includes('viral video ideas') || 
-                          lastMessage?.content?.toLowerCase().includes('hit me');
+    const isHitMeRequest = lastMessage?.content?.startsWith('[HIT_ME_COMMAND]');
 
     const response = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || 'gpt-4',
@@ -56,7 +55,10 @@ export async function POST(req: Request) {
           role: "system",
           content: SYSTEM_MESSAGE
         },
-        ...messages
+        ...messages.map(msg => ({
+          ...msg,
+          content: msg.content.replace('[HIT_ME_COMMAND] ', '') // Remove the command prefix
+        }))
       ],
     });
 

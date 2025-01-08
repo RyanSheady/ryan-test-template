@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useCallback } from 'react';
 
 interface Message {
@@ -5,6 +7,8 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
+
+const VIRAL_IDEAS_PROMPT = `Generate 5 viral TikTok video ideas for a podcast sharing app where users can see what podcasts their friends are secretly listening to. Make them trendy, engaging, and use current TikTok formats. Number them 1-5 and make each one unique and viral-worthy. Include trending sounds or music suggestions for each. Focus on the "caught in 4k" aspect of seeing friends' secret podcast habits.`;
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([{
@@ -21,12 +25,12 @@ export function useChat() {
 
     // Check for "Hit Me" command
     const processedInput = input.trim();
+    const isHitMeCommand = processedInput.toLowerCase() === 'hit me';
+    
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: processedInput === 'Hit Me' 
-        ? "Give me 5 viral video ideas for TikTok that would promote a podcast sharing app where users can see what podcasts their friends are secretly listening to. Make them trendy, engaging, and use current TikTok formats. Number them 1-5 and make each one unique and viral-worthy. Include trending sounds or music suggestions for each."
-        : processedInput
+      content: isHitMeCommand ? VIRAL_IDEAS_PROMPT : processedInput
     };
 
     setMessages(msgs => [...msgs, userMessage]);
@@ -40,7 +44,10 @@ export function useChat() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: [...messages, userMessage],
+          messages: [...messages, {
+            ...userMessage,
+            content: isHitMeCommand ? `[HIT_ME_COMMAND] ${userMessage.content}` : userMessage.content
+          }],
         }),
       });
 
