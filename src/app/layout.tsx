@@ -5,8 +5,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AI Chat App',
-  description: 'Chat with an AI assistant',
+  title: 'Viral Content Creator',
+  description: 'Your bestie for viral TikTok ideas & podcast tea ✨',
 };
 
 export default function RootLayout({
