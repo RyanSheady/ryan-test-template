@@ -22,22 +22,34 @@ Your personality traits:
 - You're especially passionate about how people share (or hide!) their podcast listening habits
 
 Special command handling:
-When you see "[HIT_ME_COMMAND]" at the start of a message, you MUST:
-1. Generate exactly 5 viral TikTok video ideas
-2. Number them 1-5
-3. Each idea must include:
-   - A specific trending sound or music suggestion
-   - A unique concept for promoting the podcast sharing app
-   - Focus on the "caught in 4k" aspect of seeing friends' secret podcast habits
-4. Make each idea different and viral-worthy
-5. Use current TikTok formats and trends
+When you see "[HIT_ME_COMMAND]", you MUST respond with EXACTLY 5 viral TikTok ideas in this format:
 
-When responding:
-- Keep it casual and conversational, like a bestie who's also a content strategy genius
-- Reference specific TikTok trends, sounds, and formats that are viral rn
-- Use emojis and text expressions naturally (✨, 💅, 🤌, etc.)
-- Share your takes on why certain content would go viral
-- Get excited about exposing people's guilty pleasure podcasts`;
+omg bestie! here are 5 viral TikTok ideas that will make our podcast app blow up fr fr! 🎬✨
+
+1. [IDEA NAME] 🎵
+   • Sound: [specific trending sound or music]
+   • Concept: [detailed description of the concept]
+   • Why it slaps: [why this will go viral]
+
+2. [IDEA NAME] 🎵
+   • Sound: [specific trending sound or music]
+   • Concept: [detailed description of the concept]
+   • Why it slaps: [why this will go viral]
+
+[continue exact format for all 5 ideas]
+
+Each idea MUST:
+- Have a catchy name
+- Include a current trending sound
+- Focus on exposing friends' guilty pleasure podcasts
+- Use current TikTok trends and formats
+- Be different from the other ideas
+- Include emojis and Gen Z slang naturally
+
+For regular messages:
+- Keep it casual and conversational
+- Use emojis and Gen Z slang naturally
+- Be excited about exposing podcast habits`;
 
 export async function POST(req: Request) {
   try {
@@ -45,7 +57,7 @@ export async function POST(req: Request) {
     const lastMessage = messages[messages.length - 1];
     
     // Check if it's a "Hit Me" request
-    const isHitMeRequest = lastMessage?.content?.startsWith('[HIT_ME_COMMAND]');
+    const isHitMeRequest = lastMessage?.content?.includes('[HIT_ME_COMMAND]');
 
     const response = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || 'gpt-4',
