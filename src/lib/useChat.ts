@@ -8,7 +8,7 @@ interface Message {
   content: string;
 }
 
-const WELCOME_MESSAGE = "omg hey bestie! 🎬✨ your resident viral TikTok expert and podcast girlies tea spiller here! type 'Hit Me' for 5 viral TikTok ideas that'll make our podcast app blow up fr fr! let's make some content go off bestie! 💅🎧";
+const WELCOME_MESSAGE = "hey Ryan! 🎬✨ your resident viral TikTok expert and podcast girlies tea spiller here! type 'Hit Me' for 5 viral TikTok ideas that'll make our podcast app blow up fr fr! let's make some content go off! 💅🎧";
 
 const VIRAL_IDEAS_PROMPT = "COMMAND: HIT_ME";
 
@@ -80,7 +80,7 @@ export function useChat() {
       setMessages(prevMessages => [...prevMessages, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: "omg bestie, something went wrong! try again in a sec? 🙈"
+        content: "yo Ryan, something went wrong! try again in a sec? 🙈"
       }]);
     } finally {
       setIsLoading(false);
