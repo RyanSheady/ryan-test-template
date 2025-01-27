@@ -10,7 +10,7 @@ export default function Home() {
             Viral Content Creator
           </h1>
           <p className="text-gray-600 text-lg">
-            Your bestie for 🔥 TikTok ideas & podcast tea ✨
+            Your go-to for 🔥 TikTok ideas & podcast tea ✨
           </p>
         </div>
 

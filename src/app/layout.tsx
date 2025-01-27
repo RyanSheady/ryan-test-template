@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Viral Content Creator',
-  description: 'Your bestie for viral TikTok ideas & podcast tea ✨',
+  description: 'Your go-to for viral TikTok ideas & podcast tea ✨',
 };
 
 export default function RootLayout({
